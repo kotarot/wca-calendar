@@ -16,8 +16,6 @@ require_once __DIR__ . '/config.php';
 $comps = array();
 try {
     $dbh = new PDO('mysql:host=' . MYSQL_HOST . ';dbname=' . MYSQL_DATABASE, MYSQL_USERNAME, MYSQL_PASSWORD);
-    $stmt = $dbh->prepare('CREATE TABLE IF NOT EXISTS `Competitions_added` (`id` varchar(32) NOT NULL)');
-    $stmt->execute();
     foreach($dbh->query('SELECT cmp.`id`, cmp.`name`, `cityName`, cnt.`name` AS `countryName`, cmp.`year`, cmp.`month`, cmp.`day`, cmp.`endMonth`, cmp.`endDay`
                          FROM `Competitions` AS cmp LEFT JOIN `Countries` AS cnt ON cmp.`CountryId` = cnt.`id`') as $row) {
         $comps[$row['id']] = $row;
