@@ -12,21 +12,19 @@ $vCalendar = new \Eluceo\iCal\Component\Calendar('-//Kotaro Terada//WCA Competit
 $vCalendar->setName('WCA Competitions');
 
 // WCAデータベースから大会リストを取得
-$region = isset($_GET['region'])? $_GET['region'] : '';
 require_once __DIR__ . '/config.php';
 $comps = array();
 try {
     $dbh = new PDO('mysql:host=' . MYSQL_HOST . ';dbname=' . MYSQL_DATABASE, MYSQL_USERNAME, MYSQL_PASSWORD);
-    if ($region === '') {
-        foreach($dbh->query('SELECT cmp.`id`, cmp.`name`, `cityName`, cnt.`name` AS `countryName`, cmp.`year`, cmp.`month`, cmp.`day`, cmp.`endMonth`, cmp.`endDay`
-                             FROM `Competitions` AS cmp LEFT JOIN `Countries` AS cnt ON cmp.`CountryId` = cnt.`id`') as $row) {
+    $sql = 'SELECT cmp.`id`, cmp.`name`, `cityName`, cnt.`name` AS `countryName`, cmp.`year`, cmp.`month`, cmp.`day`, cmp.`endMonth`, cmp.`endDay`
+            FROM `Competitions` AS cmp LEFT JOIN `Countries` AS cnt ON cmp.`CountryId` = cnt.`id`';
+    if (!isset($_GET['region'])) {
+        foreach($dbh->query($sql) as $row) {
             $comps[$row['id']] = $row;
         }
     } else {
-        $sql = 'SELECT cmp.`id`, cmp.`name`, `cityName`, cnt.`name` AS `countryName`, cmp.`year`, cmp.`month`, cmp.`day`, cmp.`endMonth`, cmp.`endDay`
-                FROM `Competitions` AS cmp LEFT JOIN `Countries` AS cnt ON cmp.`CountryId` = cnt.`id` WHERE `countryId` = ?';
-        $sth = $dbh->prepare($sql);
-        $sth->execute(array($region));
+        $sth = $dbh->prepare($sql . ' WHERE `countryId` = ?');
+        $sth->execute(array($_GET['region']));
         foreach($sth->fetchAll() as $row) {
             $comps[$row['id']] = $row;
         }
