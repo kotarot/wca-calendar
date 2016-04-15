@@ -2,7 +2,9 @@
 
 ## Usage
 
-See my [blog article](http://www.terabo.net/blog/wca-competitions-calendar) (Japanese).
+iCal URL: http://www.terabo.net/wca-calendar/cal.php
+
+For details, see [my blog article](http://www.terabo.net/blog/wca-competitions-calendar) (Japanese).
 
 ## For developers
 
